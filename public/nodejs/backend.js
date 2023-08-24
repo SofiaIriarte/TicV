@@ -101,3 +101,63 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+// JavaScript code goes here
+
+// Example: Add item to cart
+function addToCart(product_id) {
+  // Retrieve the product information based on the productId
+  var product = getProductInfo(product_id);
+
+  // Add the product to the cart
+  var cartItem = {
+    id: product.id,
+    name: product.name,
+    price: product.price
+  };
+  addToCartItems(cartItem);
+
+  // Display a confirmation message
+  alert('Item added to cart!');
+}
+
+// Example: Get product information
+function getProductInfo(productId) {
+  // Retrieve product information from the server or database
+  // Replace this with your own implementation
+  // For example, you can fetch the product information via AJAX
+
+  var products = [
+    { id: 'product1', name: 'Product 1', price: 19.99 },
+    { id: 'product2', name: 'Product 2', price: 29.99 }
+  ];
+
+  var product = products.find(function (p) {
+    return p.id === productId;
+  });
+
+  return product;
+}
+
+// Example: Add item to the cart
+function addToCartItems(item) {
+  // Add the item to the cart storage
+  // Replace this with your own implementation
+  // For example, you can use localStorage or session storage
+
+  var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  cartItems.push(item);
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+}

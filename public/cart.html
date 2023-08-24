@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ecommerce Webpage</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>My Ecommerce Store</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="file:///C:/Users/Sofía/Desktop/TryOn/TicV/public/product.html">Products</a></li>
+        <li><a href="file:///C:/Users/Sofía/Desktop/TryOn/TicV/public/cart.html">Cart</a></li>
+        <li><a href="file:///C:/Users/Sofía/Desktop/TryOn/TicV/public/contact.html">Contact</a></li>
+        <li><input type="search" placeholder="Buscar"></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Carrito</h2>
+    <div>
+        <table>
+            <tr>
+                <tr>Producto</tr>
+              <th>
+                <img src="/img/Remeras/Imagen1.png">
+              </th>
+              <th>Cantidad</th>
+              <th>Precio</th>
+              <th>
+                <button>Eliminar</button>
+              </th>
+            </tr>
+        </table>
+        <p>Envio</p>
+        <button class="dropbtn">Seleccionar</button>
+        <div class="dropdown-content">
+            <a href="#">Direccion</a>
+            <button onclick="openModal()">Agregar direccion</button>
+        </div>
+    </div>
+    <div>
+        <div>
+            <p>Subtotal</p>
+            <p>Total</p>
+        </div>
+        <div>
+            <p>$</p>
+            <p>$</p>
+        </div>
+        <button>Comprar ahora</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 My Ecommerce Store. All rights reserved.</p>
+  </footer>
+
+  <div class="agregar direccion" id="nueva_direccion">
+    <h2>Agregar Direccion</h2>
+    <textarea>Departamento</textarea>
+    <textarea>Ciudad</textarea>
+    <textarea>Barrio</textarea>
+    <textarea>Calle</textarea>
+    <textarea>Esquina</textarea>
+    <textarea>Numero</textarea>
+    <textarea>Apartamento</textarea>
+    <textarea>Telefono</textarea>
+    <label for="dateInput">Fecha de entrega</label>
+    <input type="date" id="dateInput" name="selectedDate">
+    <div class="dropdown-content">
+        <a href="#">Horario</a>
+    </div>
+    <button onclick="guardarDireccion()">Agregar</button>
+    <button onclick="cerrarModal()">Cerrar</button>
+  </div>
+
+</body>
+</html>
