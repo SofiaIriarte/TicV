@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ofertante</title>
+</head>
+<body>
+    <video id="localVideo" autoplay></video>
+    
+    <script>
+        const localVideo = document.getElementById('localVideo');
+
+        // Obtener acceso a la cámara
+        async function getLocalStream() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                localVideo.srcObject = stream;
+                return stream;
+            } catch (error) {
+                console.error('Error al acceder a la cámara:', error);
+            }
+        }
+
+        getLocalStream().then(localStream => {
+            const peerConnection = new RTCPeerConnection();
+
+            // Agregar la pista de video al RTCPeerConnection
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+
+            // Crear oferta y enviarla al respondedor
+            peerConnection.createOffer().then(offer => {
+                return peerConnection.setLocalDescription(offer);
+            }).then(() => {
+                // Enviar la oferta a través de un canal de señalización
+                // Esto podría ser a través de WebSocket, HTTP, etc.
+                const offerData = peerConnection.localDescription;
+                // Envía offerData al respondedor
+            }).catch(error => {
+                console.error('Error al crear oferta:', error);
+            });
+        });
+    </script>
+</body>
+</html>

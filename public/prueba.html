@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camara en HTML</title>
+</head>
+<body>
+    <button id="startButton">Iniciar cámara</button>
+    <video id="videoElement" autoplay></video>
+    
+    <script>
+        // Obtener referencia al botón y al elemento de video
+        const startButton = document.getElementById('startButton');
+        const videoElement = document.getElementById('videoElement');
+
+        // Función para manejar el clic en el botón
+        startButton.addEventListener('click', async () => {
+            try {
+                // Pedir permiso para acceder a la cámara
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+                // Mostrar el stream de la cámara en el elemento de video
+                videoElement.srcObject = stream;
+            } catch (error) {
+                console.error('Error al acceder a la cámara:', error);
+            }
+        });
+    </script>
+</body>
+</html>
