@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Respondedor</title>
+    <script src="/ofertante.html"></script>
 </head>
 <body>
     <video id="remoteVideo" autoplay></video>
@@ -12,7 +13,7 @@
 
         // Escuchar la oferta del ofertante a través del canal de señalización
         // Esto podría ser a través de WebSocket, HTTP, etc.
-        const receivedOfferData = /* Obtener los datos de la oferta */;
+        var receivedOfferData; /* Obtener los datos de la oferta */
         peerConnection.setRemoteDescription(new RTCSessionDescription(receivedOfferData)).then(() => {
             // Obtener acceso a la cámara local
             return navigator.mediaDevices.getUserMedia({ video: true });
@@ -34,14 +35,14 @@
         });
 
         // Escuchar la respuesta del ofertante a través del canal de señalización
-        const receivedAnswerData = /* Obtener los datos de la respuesta */;
+        var receivedAnswerData; /* Obtener los datos de la respuesta */
         peerConnection.setRemoteDescription(new RTCSessionDescription(receivedAnswerData)).catch(error => {
             console.error('Error al establecer la descripción remota (respuesta):', error);
         });
 
         // Escuchar candidatos ICE del ofertante a través del canal de señalización
         // Esto también podría ser a través de WebSocket, HTTP, etc.
-        const receivedIceCandidate = /* Obtener los datos del candidato ICE */;
+        var receivedIceCandidate; /* Obtener los datos del candidato ICE */
         if (receivedIceCandidate) {
             peerConnection.addIceCandidate(new RTCIceCandidate(receivedIceCandidate)).catch(error => {
                 console.error('Error al agregar el candidato ICE:', error);
