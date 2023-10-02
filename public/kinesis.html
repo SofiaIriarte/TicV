@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enviar stream de video a Kinesis</title>
+</head>
+<body>
+    <video id="videoElement" autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <video id="kinesisVideo" autoplay></video>
+    <script src="https://cdn.rawgit.com/aws-amplify/amplify-js/3.3.2/dist/aws-amplify.min.js"></script>
+    <script>
+        async function startStreaming() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const videoElement = document.getElementById('videoElement');
+            videoElement.srcObject = stream;
+        }
+        startStreaming();
+
+        // Obtén el elemento de video y el canvas
+        const videoElement = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const kinesisVideo = document.getElementById('kinesisVideo');
+
+        // Procesamiento de video en tiempo real
+        function processVideo() {
+            // Captura un frame de video en el canvas
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            // Aquí puedes agregar tu lógica de procesamiento de imagen
+            // Por ejemplo, aplicar un filtro de color, detección de bordes, etc.
+
+            // Mostrar el resultado procesado en el elemento de video
+            requestAnimationFrame(processVideo);
+        }
+
+        // Comienza el procesamiento de video en tiempo real
+        videoElement.addEventListener('play', () => {
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            processVideo();
+        });
+
+        // Configura las credenciales de AWS para acceder a Kinesis
+        Amplify.configure({
+            Auth: {
+                identityPoolId: 'us-east-1:48eaed5b-82b6-4195-883e-cdc909bd6950',
+                region: 'us-east-1',
+            },
+            API: {
+                endpoints: [
+                    {
+                        name: 'kinesisApi',
+                        endpoint: 'https://<users_streams>.kinesisvideo.<us-east-1>.amazonaws.com',
+                    },
+                ],
+            },
+        });
+
+        // Función para cargar la imagen de Kinesis
+        async function loadKinesisImage() {
+            // Inicia sesión y obtén un token de autenticación (cambiar por tus propias credenciales)
+            await Auth.signIn('USERNAME', 'PASSWORD');
+
+            // Obtiene el último frame del stream de Kinesis
+            const response = await API.get('kinesisApi', '/frame', {
+                headers: {
+                    Authorization: `Bearer ${Auth.user.signInUserSession.accessToken.jwtToken}`,
+                },
+            });
+
+            // Muestra el frame de Kinesis en el elemento de video
+            kinesisVideo.src = `data:image/jpeg;base64,${response.data}`;
+        }
+
+        // Inicia la captura de video local (cámara)
+        async function startVideoElement() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoElement.srcObject = stream;
+        }
+
+        // Inicia la carga del frame de Kinesis
+        startVideoElement(); // Inicia la captura de video local
+        loadKinesisImage(); // Carga el frame de Kinesis
+
+        // Puedes llamar a loadKinesisImage() periódicamente para actualizar el frame desde Kinesis.
+        // Ajusta la lógica según tus necesidades para manejar actualizaciones en tiempo real.
+
+    </script>
+    <script>
+        // Importa la AWS SDK para JavaScript
+        const AWS = require('aws-sdk');
+
+        // Configura las credenciales y la región de AWS
+        AWS.config.update({
+            accessKeyId: 'AKIA4ZS3RPOKRRXNVU6N',
+            secretAccessKey: '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',
+            region: 'us-east-1'
+        });
+
+        // Crea un objeto KinesisVideo
+        const kinesisvideo = new AWS.KinesisVideo();
+
+        // Obtén el endpoint del stream que creaste
+        const endpoint = 'https://<users_streams>.kinesisvideo.<us-east-1>.amazonaws.com';
+
+        // Configura la cámara y el stream
+        const mediaStream = document.getElementById('videoElement').srcObject;
+        const videoStream = new AWS.KinesisVideo.Stream({
+            deviceName: 'device',
+            mediaStream,
+            kinesisVideo
+        });
+
+        // Inicia la transmisión del video al stream de Kinesis
+        videoStream.start();
+
+        // Maneja errores y eventos según sea necesario
+        videoStream.on('error', (err) => {
+            console.error('Error:', err);
+        });
+
+        videoStream.on('data', (data) => {
+            console.log('Datos transmitidos:', data);
+        });
+
+    </script>
+</body>
+</html>
